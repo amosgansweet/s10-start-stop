@@ -18,7 +18,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           source: "scripts/start.sh"
-          target: "~/remote-scripts/"
+          target: "~/web/"
 
       - name: Run Start Script on Remote Server
         uses: appleboy/ssh-action@v1.0.0
@@ -28,5 +28,5 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           script: |
-            chmod +x ~/remote-scripts/start.sh
-            bash ~/remote-scripts/start.sh
+            chmod +x ~/web/start.sh
+            bash ~/web/start.sh
