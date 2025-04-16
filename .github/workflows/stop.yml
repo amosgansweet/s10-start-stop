@@ -1,32 +1,31 @@
-name: Stop Script
+name: Stop Mining
 
 on:
   workflow_dispatch:
 
 jobs:
-  run-script:
+  stop-job:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: Set up sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
 
-      - name: Copy script to remote server
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          port: 22
-          source: "scripts/stop.sh"
-          target: "~/web/"
+      - name: Extract server info from secrets
+        run: |
+          echo "$SERVERS_JSON" > servers.json
+        env:
+          SERVERS_JSON: ${{ secrets.SERVERS_JSON }}
 
-      - name: Run Stop Script on Remote Server
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          port: 22
-          script: |
-            chmod +x ~/web/stop.sh
-            bash ~/web/stop.sh
+      - name: Generate and run SSH stop script
+        run: |
+          echo "#!/bin/bash" > stop.sh
+          while IFS= read -r server; do
+            user=$(echo "$server" | jq -r '.username')
+            pass=$(echo "$server" | jq -r '.password')
+            host=$(echo "$server" | jq -r '.host')
+            echo "echo Stopping on $host" >> stop.sh
+            echo "sshpass -p \"$pass\" ssh -o StrictHostKeyChecking=no $user@$host 'bash ~/stop.sh'" >> stop.sh
+          done < <(jq -c '.[]' servers.json)
+          chmod +x stop.sh
+          ./stop.sh
