@@ -1,4 +1,4 @@
-name: Start Mining
+name: Start s10webh2
 
 on:
   workflow_dispatch:
