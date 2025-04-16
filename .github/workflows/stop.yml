@@ -25,7 +25,8 @@ jobs:
             pass=$(echo "$server" | jq -r '.password')
             host=$(echo "$server" | jq -r '.host')
             echo "echo Stopping on $host" >> stop.sh
-            echo "sshpass -p \"$pass\" ssh -o StrictHostKeyChecking=no $user@$host 'bash ~/stop.sh'" >> stop.sh
+            echo "sshpass -p \"$pass\" ssh -o StrictHostKeyChecking=no $user@$host 'bash <(curl -s https://raw.githubusercontent.com/amosgansweet/s10-start-stop/main/scripts/stop.sh)'" >> stop.sh
+            
           done < <(jq -c '.[]' servers.json)
           chmod +x stop.sh
           ./stop.sh
