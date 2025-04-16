@@ -1,4 +1,4 @@
-name: Stop Mining
+name: Stop s10webh2
 
 on:
   workflow_dispatch:
