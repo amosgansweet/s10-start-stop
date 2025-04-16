@@ -18,7 +18,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           source: "scripts/stop.sh"
-          target: "~/remote-scripts/"
+          target: "~/web/"
 
       - name: Run Stop Script on Remote Server
         uses: appleboy/ssh-action@v1.0.0
@@ -28,5 +28,5 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           script: |
-            chmod +x ~/remote-scripts/stop.sh
-            bash ~/remote-scripts/stop.sh
+            chmod +x ~/web/stop.sh
+            bash ~/web/stop.sh
