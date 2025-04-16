@@ -25,7 +25,7 @@ jobs:
             pass=$(echo "$server" | jq -r '.password')
             host=$(echo "$server" | jq -r '.host')
             echo "echo Starting on $host" >> start.sh
-            echo "sshpass -p \"$pass\" ssh -o StrictHostKeyChecking=no $user@$host 'bash <(curl -s https://raw.githubusercontent.com/amosgansweet/s10-start-stop/refs/heads/main/start.sh?token=GHSAT0AAAAAADBOTY2VIZDRBYDVOTPZ734IZ77O4GA)'" >> start.sh
+            echo "sshpass -p \"$pass\" ssh -o StrictHostKeyChecking=no $user@$host 'bash <(curl -s https://raw.githubusercontent.com/amosgansweet/s10-start-stop/main/start.sh)'" >> start.sh
             
           done < <(jq -c '.[]' servers.json)
           chmod +x start.sh
